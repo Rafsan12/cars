@@ -23,19 +23,26 @@ export default function Hero() {
       {slides.map((slide, index) => (
         <div
           key={index}
-          className={`carousel-item relative w-full ${
+          className={`carousel-item absolute inset-0 w-full h-full ${
             currentSlide === index ? "block" : "hidden"
           }`}
         >
-          <img src={slide} className="w-full rounded-2xl" />
-          <div className="absolute left-5 right-5 bottom-0 flex -translate-y-1/2 transform justify-end gap-8">
+          {/* Image Section */}
+          <img
+            src={slide}
+            className="w-full h-full object-cover rounded-2xl"
+            alt={`Slide ${index + 1}`}
+          />
+
+          {/* Navigation Buttons */}
+          <div className="absolute left-5 right-5 bottom-5 flex justify-end gap-8">
             <button
               onClick={() =>
                 setCurrentSlide(
                   (currentSlide - 1 + slides.length) % slides.length
                 )
               }
-              className="btn btn-circle"
+              className="btn btn-circle bg-gray-800 hover:bg-gray-600 text-white"
             >
               ❮
             </button>
@@ -43,22 +50,24 @@ export default function Hero() {
               onClick={() =>
                 setCurrentSlide((currentSlide + 1) % slides.length)
               }
-              className="btn btn-circle bg-red-600"
+              className="btn btn-circle bg-red-600 hover:bg-red-500 text-white"
             >
               ❯
             </button>
           </div>
-          <div className="absolute left-5 right-5 bottom-0 flex -translate-y-1/2 transform  gap-8">
-            <div className="text-gray-300 space-y-7">
-              <h1 className="text-6xl font-bold w-1/4">
+
+          {/* Overlay Content */}
+          <div className="absolute inset-0 flex items-center bg-gradient-to-r from-black/60 to-transparent">
+            <div className="text-white space-y-7 pl-12 w-1/2">
+              <h1 className="text-5xl font-bold">
                 Affordable Price For Car Servicing
               </h1>
               <p>
                 There are many variations of passages of available, but the
-                majority have suffered alteration in some form
+                majority have suffered alteration in some form.
               </p>
-              <div className="">
-                <button className="btn btn-success mr-6">Discover More</button>
+              <div className="flex gap-4">
+                <button className="btn btn-success">Discover More</button>
                 <button className="btn btn-outline btn-primary">
                   Latest Project
                 </button>
