@@ -21,7 +21,21 @@ export default function Login() {
       const response = await userWithEmailAndPassword(email, password);
       const result = response.user;
       navigate("/");
-      if (!result) {
+      if (result) {
+        const handleForm = async (data) => {
+          const { email, password } = data;
+          try {
+            const response = await userWithEmailAndPassword(email, password);
+            const result = response.user;
+            navigate("/");
+            if (!result) {
+              navigate("/register");
+            }
+            console.log(result);
+          } catch (error) {
+            console.log(error.message);
+          }
+        };
         navigate("/register");
       }
       console.log(result);
