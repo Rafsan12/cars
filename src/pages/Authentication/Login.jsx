@@ -1,24 +1,29 @@
 import { Player } from "@lottiefiles/react-lottie-player";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LoginSVG from "../../assets/Animation - 1734756802577.json";
 import { AuthContext } from "../../context";
 
 export default function Login() {
   const { userWithEmailAndPassword } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const navigation = useNavigation();
+
   const handleForm = async (data) => {
     const { email, password } = data;
     try {
       const response = await userWithEmailAndPassword(email, password);
       const result = response.user;
+      navigate("/");
+      if (!result) {
+        navigate("/register");
+      }
       console.log(result);
     } catch (error) {
       console.log(error.message);
@@ -34,7 +39,7 @@ export default function Login() {
             <Player src={LoginSVG} className="player" loop autoplay />
           </div>
         </div>
-        <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+        <div className="card bg-base-100 w-1/2 max-w-sm shrink-0 ">
           <form className="card-body" onSubmit={handleSubmit(handleForm)}>
             {/* Email Input */}
             <div className="form-control">
@@ -96,7 +101,9 @@ export default function Login() {
           </form>
 
           <p className="text-center mb-4">OR</p>
-          <button className="btn btn-primary px-20">Login With Google</button>
+          <button className="btn btn-primary mx-auto px-28">
+            Login With Google
+          </button>
 
           <p className="my-4 text-center">
             New to Car Doctor Website{" "}

@@ -1,7 +1,10 @@
+import { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Logo from "../../assets/logo.svg";
+import { AuthContext } from "../../context";
 
 export default function Navbar() {
+  const { user, logOut } = useContext(AuthContext);
   const links = (
     <>
       <li>
@@ -20,7 +23,15 @@ export default function Navbar() {
         <NavLink to="/contact">Contact</NavLink>
       </li>
       <li>
-        <NavLink to="/login">Login</NavLink>
+        {user ? (
+          <>
+            <button onClick={() => logOut()}>Log Out</button>
+          </>
+        ) : (
+          <>
+            <NavLink to="/login">Login</NavLink>
+          </>
+        )}
       </li>
     </>
   );
@@ -60,6 +71,7 @@ export default function Navbar() {
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
         <div className="navbar-end">
+          <p>{user?.email}</p>
           <button className="btn btn-ghost btn-circle">
             <svg
               xmlns="http://www.w3.org/2000/svg"
