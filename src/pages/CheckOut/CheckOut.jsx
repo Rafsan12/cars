@@ -4,6 +4,53 @@ import { useParams } from "react-router-dom";
 export default function CheckOut() {
   const { id } = useParams();
   const [service, setService] = useState(null);
+  const [inputState, setInputState] = useState({
+    fullName: "",
+    email: "",
+    date: "",
+    dueAmount: "",
+  });
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setInputState({
+      ...inputState,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const orderConfirmed = {
+      ...inputState,
+      serviceTitle: service?.title ?? "",
+      service_img: service?.img,
+      serviceID: id,
+    };
+
+    const fetchBooking = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/bookings", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(orderConfirmed),
+        });
+        const result = await response.json();
+        if (result.insertedId) {
+          alert("Booking successfully");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBooking();
+
+    // console.log(orderConfirmed);
+  };
 
   useEffect(() => {
     const serviceItem = async () => {
@@ -13,6 +60,13 @@ export default function CheckOut() {
         const result = await response.json();
         // const selectService = result.find((item) => item.id === parseInt(id));
         setService(result);
+
+        if (result && result.price) {
+          setInputState((prevState) => ({
+            ...prevState,
+            dueAmount: `$ ${result.price}`,
+          }));
+        }
       } catch (error) {
         console.log(error);
       }
@@ -21,28 +75,22 @@ export default function CheckOut() {
   }, [id]);
   return (
     <>
-      <h1>Booking Service: {service?.title}</h1>
+      <h1 className="text-center text-3xl">
+        Booking Service: {service?.title}
+      </h1>
 
-      <form className="card-body">
+      <form onSubmit={handleSubmit} className="card-body">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Email</span>
+              <span className="label-text">Full Name</span>
             </label>
             <input
               type="text"
-              placeholder="email"
-              className="input input-bordered"
-              required
-            />
-          </div>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Password</span>
-            </label>
-            <input
-              type="text"
-              placeholder="password"
+              placeholder="Your Full Name"
+              name="fullName"
+              value={inputState.fullName}
+              onChange={handleChange}
               className="input input-bordered"
               required
             />
@@ -52,21 +100,42 @@ export default function CheckOut() {
               <span className="label-text">Email</span>
             </label>
             <input
-              type="text"
+              type="Email"
               placeholder="email"
+              name="email"
+              value={inputState.email}
+              onChange={handleChange}
               className="input input-bordered"
               required
             />
           </div>
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Password</span>
+              <span className="label-text">Data</span>
+            </label>
+            <input
+              type="date"
+              placeholder="date"
+              name="date"
+              value={inputState.date}
+              onChange={handleChange}
+              className="input input-bordered"
+              required
+            />
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Due amount</span>
             </label>
             <input
               type="text"
-              placeholder="password"
+              placeholder="Due Amount"
+              name="dueAmount"
+              value={inputState.dueAmount}
+              onChange={handleChange}
               className="input input-bordered"
               required
+              readOnly
             />
           </div>
         </div>
