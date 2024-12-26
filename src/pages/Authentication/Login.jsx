@@ -1,13 +1,14 @@
 import { Player } from "@lottiefiles/react-lottie-player";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LoginSVG from "../../assets/Animation - 1734756802577.json";
 import { AuthContext } from "../../context";
 
 export default function Login() {
   const { userWithEmailAndPassword } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     register,
@@ -19,28 +20,18 @@ export default function Login() {
     const { email, password } = data;
     try {
       const response = await userWithEmailAndPassword(email, password);
-      const result = response.user;
-      navigate("/");
-      if (result) {
-        const handleForm = async (data) => {
-          const { email, password } = data;
-          try {
-            const response = await userWithEmailAndPassword(email, password);
-            const result = response.user;
-            navigate("/");
-            if (!result) {
-              navigate("/register");
-            }
-            console.log(result);
-          } catch (error) {
-            console.log(error.message);
-          }
-        };
+      const user = response.user;
+
+      if (user) {
+        navigate(location?.state ?? "/");
+        console.log("Login successful:", user);
+      } else {
+        console.log("User not found, navigating to register");
         navigate("/register");
       }
-      console.log(result);
     } catch (error) {
-      console.log(error.message);
+      console.error("Login error:", error.message);
+      // Optionally show an error to the user
     }
   };
 

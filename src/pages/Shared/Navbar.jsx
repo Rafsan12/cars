@@ -33,6 +33,7 @@ export default function Navbar() {
           </>
         )}
       </li>
+      <li>{user?.email ? <Link to="/bookings">My Booking</Link> : ""}</li>
     </>
   );
   return (
@@ -71,7 +72,7 @@ export default function Navbar() {
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
         <div className="navbar-end">
-          <p>{user?.email}</p>
+          <p className="text-xs text-yellow-300">{user?.email}</p>
           <button className="btn btn-ghost btn-circle">
             <svg
               xmlns="http://www.w3.org/2000/svg"
