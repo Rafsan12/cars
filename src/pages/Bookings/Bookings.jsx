@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context";
 import BookingRow from "./BookingRow";
@@ -10,11 +11,15 @@ export default function Bookings() {
 
   useEffect(() => {
     const fetchBookingsData = async () => {
-      const response = await fetch(url);
-      const result = await response.json();
-      setBookings(result);
-      console.log(result);
+      try {
+        const response = await axios.get(url, { withCredentials: true });
+        const result = response.data;
+        setBookings(result);
+      } catch (error) {
+        console.error("Error fetching bookings:", error.message);
+      }
     };
+
     fetchBookingsData();
   }, [url]);
 

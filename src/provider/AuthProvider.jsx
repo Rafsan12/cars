@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import axios from "axios";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -30,9 +31,33 @@ export default function AuthProvider({ children }) {
   };
 
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (user) => {
+    const unSubscribe = onAuthStateChanged(auth, async (user) => {
+      const userEmail = user?.email;
+      const loggedUser = { email: userEmail };
+
       setUser(user);
+
+      console.log("Current User : ", user);
       setLoading(false);
+      if (user) {
+        const response = await axios.post(
+          "http://localhost:5000/jwt",
+          loggedUser,
+          {
+            withCredentials: true,
+          }
+        );
+        const result = response.data;
+        console.log("token: ", result);
+      } else {
+        const response = await axios.post(
+          "http://localhost:5000/logout",
+          loggedUser,
+          { withCredentials: true }
+        );
+        const result = response.data;
+        console.log("Log-out: ", result);
+      }
     });
     return () => {
       return unSubscribe();

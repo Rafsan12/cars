@@ -1,5 +1,6 @@
 import { Player } from "@lottiefiles/react-lottie-player";
-import { useContext } from "react";
+import axios from "axios";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LoginSVG from "../../assets/Animation - 1734756802577.json";
@@ -9,6 +10,7 @@ export default function Login() {
   const { userWithEmailAndPassword } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const {
     register,
@@ -20,18 +22,26 @@ export default function Login() {
     const { email, password } = data;
     try {
       const response = await userWithEmailAndPassword(email, password);
-      const user = response.user;
+      const loggedInUser = response.user;
 
-      if (user) {
-        navigate(location?.state ?? "/");
-        console.log("Login successful:", user);
+      if (loggedInUser) {
+        const user = { email };
+        const jwt = await axios.post("http://localhost:5000/jwt", user, {
+          withCredentials: true,
+        });
+        console.log("JWT Response:", jwt);
+        const token = jwt?.data;
+        // console.log("Token received:", token);
+        if (token) {
+          navigate(location?.state ?? "/");
+        }
+        // console.log("Login successful:", loggedInUser);
       } else {
         console.log("User not found, navigating to register");
         navigate("/register");
       }
     } catch (error) {
       console.error("Login error:", error.message);
-      // Optionally show an error to the user
     }
   };
 
@@ -46,6 +56,11 @@ export default function Login() {
         </div>
         <div className="card bg-base-100 w-1/2 max-w-sm shrink-0 ">
           <form className="card-body" onSubmit={handleSubmit(handleForm)}>
+            {/* Error Message */}
+            {errorMessage && (
+              <p className="text-red-500 text-center mt-2">{errorMessage}</p>
+            )}
+
             {/* Email Input */}
             <div className="form-control">
               <label className="label">
@@ -93,9 +108,12 @@ export default function Login() {
                 </p>
               )}
               <label className="label">
-                <a href="#" className="label-text-alt link link-hover">
+                <Link
+                  to="/forgot-password"
+                  className="label-text-alt link link-hover"
+                >
                   Forgot password?
-                </a>
+                </Link>
               </label>
             </div>
 
@@ -106,7 +124,11 @@ export default function Login() {
           </form>
 
           <p className="text-center mb-4">OR</p>
-          <button className="btn btn-primary mx-auto px-28">
+          <button
+            className="btn btn-primary mx-auto px-28"
+            disabled
+            title="Google login is not yet implemented"
+          >
             Login With Google
           </button>
 
