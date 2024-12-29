@@ -26,9 +26,13 @@ export default function Login() {
 
       if (loggedInUser) {
         const user = { email };
-        const jwt = await axios.post("http://localhost:5000/jwt", user, {
-          withCredentials: true,
-        });
+        const jwt = await axios.post(
+          "https://car-server-kappa-jet.vercel.app/jwt",
+          user,
+          {
+            withCredentials: true,
+          }
+        );
         console.log("JWT Response:", jwt);
         const token = jwt?.data;
         // console.log("Token received:", token);

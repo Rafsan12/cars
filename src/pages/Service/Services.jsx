@@ -7,7 +7,9 @@ export default function Services() {
   useEffect(() => {
     const fetchService = async () => {
       try {
-        const response = await fetch("http://localhost:5000/services");
+        const response = await fetch(
+          "https://car-server-kappa-jet.vercel.app/services"
+        );
         const result = await response.json();
         setServices(result);
       } catch (error) {

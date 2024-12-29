@@ -7,7 +7,7 @@ export default function Bookings() {
   const { user } = useContext(AuthContext);
   const [bookings, setBookings] = useState([]);
 
-  const url = `http://localhost:5000/booking?email=${user?.email}`;
+  const url = `https://car-server-kappa-jet.vercel.app/booking?email=${user?.email}`;
 
   useEffect(() => {
     const fetchBookingsData = async () => {
@@ -30,9 +30,12 @@ export default function Bookings() {
     if (proceed) {
       const deleteBooking = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/booking/${id}`, {
-            method: "DELETE",
-          });
+          const response = await fetch(
+            `https://car-server-kappa-jet.vercel.app/booking/${id}`,
+            {
+              method: "DELETE",
+            }
+          );
           if (response.ok) {
             const result = await response.json();
             const remaining = bookings.filter((booking) => booking._id !== id);

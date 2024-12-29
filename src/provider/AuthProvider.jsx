@@ -41,7 +41,7 @@ export default function AuthProvider({ children }) {
       setLoading(false);
       if (user) {
         const response = await axios.post(
-          "http://localhost:5000/jwt",
+          "https://car-server-kappa-jet.vercel.app/jwt",
           loggedUser,
           {
             withCredentials: true,
@@ -51,7 +51,7 @@ export default function AuthProvider({ children }) {
         console.log("token: ", result);
       } else {
         const response = await axios.post(
-          "http://localhost:5000/logout",
+          "https://car-server-kappa-jet.vercel.app/logout",
           loggedUser,
           { withCredentials: true }
         );

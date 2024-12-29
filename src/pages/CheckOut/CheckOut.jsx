@@ -32,13 +32,16 @@ export default function CheckOut() {
 
     const fetchBooking = async () => {
       try {
-        const response = await fetch("http://localhost:5000/bookings", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(orderConfirmed),
-        });
+        const response = await fetch(
+          "https://car-server-kappa-jet.vercel.app/bookings",
+          {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(orderConfirmed),
+          }
+        );
         const result = await response.json();
         if (result.insertedId) {
           alert("Booking successfully");
@@ -55,7 +58,9 @@ export default function CheckOut() {
   useEffect(() => {
     const serviceItem = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/services/${id}`);
+        const response = await fetch(
+          `https://car-server-kappa-jet.vercel.app/services/${id}`
+        );
 
         const result = await response.json();
         // const selectService = result.find((item) => item.id === parseInt(id));
